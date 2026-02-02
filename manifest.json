@@ -1,0 +1,16 @@
+{
+  "name": "CarryVault - Private Firearm Management",
+  "short_name": "CarryVault",
+  "description": "Secure, private firearm inventory and compliance management for gun owners",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#ff6b35",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjMGExYTFhIi8+CjxwYXRoIGQ9Ik05NiA0MEMxMjQuNSA0MCAxNDggNjMuNSAxNDggOTJDMTQ4IDEyMC41IDEyNC41IDE0NCA5NiAxNDRDNjcuNSAxNDQgNDQgMTIwLjUgNDQgOTJDNDQgNjMuNSA2Ny41IDQwIDk2IDQwWiIgZmlsbD0iI2ZmNmIzNSIvPgo8cGF0aCBkPSJNOTYgNjRDMTA5LjUgNjQgMTIwIDc0LjUgMTIwIDg4Q0xDMTIwIDEwMS41IDEwOS41IDExMiA5NiAxMTJDODIuNSAxMTIgNzIgMTAxLjUgNzIgODhDNzIgNzQuNSA4Mi41IDY0IDk2IDY0WiIgZmlsbD0iI2ZmZmZmZiIvPgo8L3N2Zz4K",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
