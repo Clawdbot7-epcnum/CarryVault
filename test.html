@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarryVault Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; background: #ff6b35; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #e55a2b; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <h1>🔫 CarryVault Test</h1>
+    
+    <div class="section">
+        <h2>Dashboard</h2>
+        <p>Gun Count: <span id="gunCount">0</span></p>
+        <button onclick="addFirearm()">➕ Add Firearm</button>
+        <button onclick="showInventory()">📋 Show Inventory</button>
+    </div>
+    
+    <div id="inventorySection" class="section hidden">
+        <h2>My Firearms</h2>
+        <div id="firearmList">
+            <p>No firearms added yet</p>
+        </div>
+        <button onclick="hideInventory()">← Back</button>
+    </div>
+    
+    <div id="addForm" class="section hidden">
+        <h3>Add Firearm</h3>
+        <input type="text" id="makeModel" placeholder="Make/Model" style="width: 100%; padding: 8px; margin: 5px 0;">
+        <input type="text" id="serial" placeholder="Serial Number" style="width: 100%; padding: 8px; margin: 5px 0;">
+        <input type="text" id="caliber" placeholder="Caliber" style="width: 100%; padding: 8px; margin: 5px 0;">
+        <button onclick="saveFirearm()">💾 Save Firearm</button>
+        <button onclick="cancelAdd()">❌ Cancel</button>
+    </div>
+
+    <script>
+        // Simple test version
+        let firearms = [];
+        
+        function addFirearm() {
+            console.log('Add firearm clicked');
+            document.getElementById('addForm').classList.remove('hidden');
+        }
+        
+        function saveFirearm() {
+            const gun = {
+                makeModel: document.getElementById('makeModel').value,
+                serial: document.getElementById('serial').value,
+                caliber: document.getElementById('caliber').value
+            };
+            
+            if (!gun.makeModel) {
+                alert('Please enter make/model');
+                return;
+            }
+            
+            firearms.push(gun);
+            document.getElementById('gunCount').textContent = firearms.length;
+            
+            // Clear form
+            document.getElementById('makeModel').value = '';
+            document.getElementById('serial').value = '';
+            document.getElementById('caliber').value = '';
+            
+            cancelAdd();
+            alert('Firearm added! Count: ' + firearms.length);
+        }
+        
+        function cancelAdd() {
+            document.getElementById('addForm').classList.add('hidden');
+        }
+        
+        function showInventory() {
+            const list = document.getElementById('firearmList');
+            if (firearms.length === 0) {
+                list.innerHTML = '<p>No firearms added yet</p>';
+            } else {
+                list.innerHTML = firearms.map((gun, i) => `
+                    <div style="border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 5px;">
+                        <strong>${gun.makeModel}</strong><br>
+                        Serial: ${gun.serial || 'N/A'}<br>
+                        Caliber: ${gun.caliber || 'N/A'}
+                    </div>
+                `).join('');
+            }
+            document.getElementById('inventorySection').classList.remove('hidden');
+        }
+        
+        function hideInventory() {
+            document.getElementById('inventorySection').classList.add('hidden');
+        }
+        
+        console.log('CarryVault test loaded!');
+    </script>
+</body>
+</html>
