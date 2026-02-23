@@ -757,6 +757,247 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        // Simplified working version based on test.html
+        class CarryVaultApp {
+            constructor() {
+                this.firearms = [];
+                this.currentTab = 'dashboard';
+                this.init();
+            }
+
+            init() {
+                console.log('CarryVault initialized');
+                this.setupEventListeners();
+                this.updateDashboard();
+            }
+
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const section = e.currentTarget.querySelector('span').textContent.toLowerCase();
+                        this.showSection(section);
+                    });
+                });
+
+                // Quick actions
+                document.querySelectorAll('.quick-action').forEach(action => {
+                    action.addEventListener('click', (e) => {
+                        const title = e.currentTarget.querySelector('.quick-action-title').textContent;
+                        if (title.includes('Add Firearm')) this.addFirearm();
+                        if (title.includes('Log Maintenance')) this.addMaintenance();
+                        if (title.includes('Add Training')) this.addTraining();
+                        if (title.includes('Export Data')) this.exportData();
+                    });
+                });
+            }
+
+            showSection(sectionName) {
+                // Hide all sections
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Remove active from all nav items
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Show selected section
+                document.getElementById(sectionName).classList.add('active');
+
+                // Activate corresponding nav item
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    if (item.querySelector('span').textContent.toLowerCase() === sectionName) {
+                        item.classList.add('active');
+                    }
+                });
+
+                this.currentTab = sectionName;
+                this.updateSection(sectionName);
+            }
+
+            updateSection(sectionName) {
+                switch(sectionName) {
+                    case 'dashboard':
+                        this.updateDashboard();
+                        break;
+                    case 'inventory':
+                        this.updateInventory();
+                        break;
+                    case 'maintenance':
+                        this.updateMaintenance();
+                        break;
+                    case 'training':
+                        this.updateTraining();
+                        break;
+                    case 'compliance':
+                        this.updateCompliance();
+                        break;
+                }
+            }
+
+            updateDashboard() {
+                document.getElementById('gunCount').textContent = this.firearms.length;
+                document.getElementById('maintenanceCount').textContent = '0';
+                document.getElementById('trainingCount').textContent = '0';
+                document.getElementById('alertCount').textContent = '0';
+            }
+
+            updateInventory() {
+                const list = document.getElementById('firearmList');
+                if (this.firearms.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔫</div>
+                            <div class="empty-state-title">No Firearms Added</div>
+                            <div class="empty-state-text">Start building your private inventory</div>
+                            <button class="btn" onclick="app.addFirearm()">Add First Firearm</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = this.firearms.map((gun, index) => `
+                    <div class="firearm-card">
+                        <div class="firearm-header">
+                            <div class="firearm-info">
+                                <h3>${gun.makeModel}</h3>
+                                <div class="firearm-meta">${gun.caliber} • ${gun.type || 'N/A'}</div>
+                                <div class="firearm-meta">Serial: ${gun.serial || 'N/A'}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            updateMaintenance() {
+                const list = document.getElementById('maintenanceList');
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔧</div>
+                        <div class="empty-state-title">No Maintenance Records</div>
+                        <div class="empty-state-text">Track cleaning, repairs, and part replacements</div>
+                        <button class="btn" onclick="app.addMaintenance()">Log First Maintenance</button>
+                    </div>
+                `;
+            }
+
+            updateTraining() {
+                const list = document.getElementById('trainingList');
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎯</div>
+                        <div class="empty-state-title">No Training Records</div>
+                        <div class="empty-state-text">Log courses, qualifications, and range sessions</div>
+                        <button class="btn" onclick="app.addTraining()">Add First Training</button>
+                    </div>
+                `;
+            }
+
+            updateCompliance() {
+                // Basic compliance placeholder
+            }
+
+            addFirearm() {
+                console.log('Opening add firearm form');
+                const modal = document.getElementById('addFirearmModal');
+                const backdrop = document.getElementById('modalBackdrop');
+                if (modal) {
+                    modal.style.display = 'block';
+                    if (backdrop) backdrop.style.display = 'block';
+                } else {
+                    // Fallback: create simple form
+                    this.createSimpleAddForm();
+                }
+            }
+
+            createSimpleAddForm() {
+                const formHtml = `
+                    <div id="simpleForm" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 1px solid #444; padding: 20px; border-radius: 12px; z-index: 1000;">
+                        <h3>Add Firearm</h3>
+                        <input type="text" id="simpleMakeModel" placeholder="Make/Model *" style="width: 100%; padding: 12px; margin: 8px 0; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 8px;">
+                        <input type="text" id="simpleSerial" placeholder="Serial Number" style="width: 100%; padding: 12px; margin: 8px 0; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 8px;">
+                        <input type="text" id="simpleCaliber" placeholder="Caliber" style="width: 100%; padding: 12px; margin: 8px 0; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 8px;">
+                        <div style="display: flex; gap: 12px; margin-top: 16px;">
+                            <button class="btn" onclick="app.saveSimpleFirearm()">Save</button>
+                            <button class="btn btn-secondary" onclick="app.closeSimpleForm()">Cancel</button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', formHtml);
+            }
+
+            saveSimpleFirearm() {
+                const gun = {
+                    makeModel: document.getElementById('simpleMakeModel').value,
+                    serial: document.getElementById('simpleSerial').value,
+                    caliber: document.getElementById('simpleCaliber').value,
+                    type: 'pistol',
+                    createdAt: new Date().toISOString()
+                };
+
+                if (!gun.makeModel) {
+                    alert('Please enter make/model');
+                    return;
+                }
+
+                this.firearms.push(gun);
+                this.updateDashboard();
+                this.updateInventory();
+                this.closeSimpleForm();
+                
+                // Clear form
+                document.getElementById('simpleMakeModel').value = '';
+                document.getElementById('simpleSerial').value = '';
+                document.getElementById('simpleCaliber').value = '';
+            }
+
+            closeSimpleForm() {
+                const form = document.getElementById('simpleForm');
+                if (form) form.remove();
+            }
+
+            saveFirearm() {
+                this.saveSimpleFirearm();
+            }
+
+            addMaintenance() {
+                alert('Maintenance feature coming soon!');
+            }
+
+            addTraining() {
+                alert('Training feature coming soon!');
+            }
+
+            exportData() {
+                const data = {
+                    firearms: this.firearms,
+                    exportDate: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `carryvault-export-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        // Initialize app
+        window.app = new CarryVaultApp();
+        
+        // Global functions
+        window.addFirearm = () => window.app.addFirearm();
+        window.saveFirearm = () => window.app.saveFirearm();
+        window.showSection = (section) => window.app.showSection(section);
+        window.exportData = () => window.app.exportData();
+        
+        console.log('CarryVault loaded successfully!');
+    </script>
 </body>
 </html>
